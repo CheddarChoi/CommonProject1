@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.commonproject1.Tab_1.Tab_1;
 import com.example.commonproject1.Tab_2.Tab_2;
+import com.example.commonproject1.Tab_3.Tab_3;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
