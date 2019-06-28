@@ -5,17 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.commonproject1.R;
-import com.example.commonproject1.Tab_1.CustomAdapter;
 
 import java.util.ArrayList;
 
@@ -45,7 +41,6 @@ public class Tab_3 extends Fragment {
 
         // codes for filtered images
         for (int i=1; i<=30; i++){
-            System.out.println(getResources().getIdentifier("sample" + i,"drawable",getActivity().getPackageName()));
             ImageItem item = new ImageItem(getResources().getIdentifier("sample" + i,"drawable",getActivity().getPackageName()), "filter "+i);
             imagelist.add(item);
         }

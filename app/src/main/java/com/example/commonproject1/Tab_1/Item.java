@@ -1,12 +1,16 @@
 package com.example.commonproject1.Tab_1;
 
+import android.graphics.Bitmap;
+
 public class Item {
     private String name;
     private String number;
+    private Bitmap photo;
 
-    public Item(String name, String number) {
+    public Item(String name, String number, Bitmap photo) {
         this.name = name;
         this.number = number;
+        this.photo = photo;
     }
 
     public String getName() {
@@ -23,5 +27,13 @@ public class Item {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public Bitmap getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Bitmap photo) {
+        this.photo = photo;
     }
 }

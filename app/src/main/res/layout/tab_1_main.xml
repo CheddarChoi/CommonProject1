@@ -24,16 +24,6 @@
             app:pressedTranslationZ="6dp"
             app:srcCompat="@drawable/add" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/phonebook"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab2"
             android:layout_width="wrap_content"
@@ -61,6 +51,17 @@
             app:layout_constraintBottom_toTopOf="@+id/fab2"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/download" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/phonebook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

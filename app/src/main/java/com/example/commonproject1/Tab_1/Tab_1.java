@@ -1,17 +1,24 @@
 package com.example.commonproject1.Tab_1;
 
 import android.Manifest;
+import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -24,7 +31,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.commonproject1.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,26 +40,22 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Tab_1 extends Fragment {
-    ArrayList<Item> phonebooklist;
-    private CustomAdapter phonebookadapter;
+    private PhonebookAdapter phonebookadapter;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
+    ArrayList<Item> phonebooklist;
 
     //variables for fab animation
     private FloatingActionButton fab, fab1, fab2;
     private Animation fab_open, fab_close, fab_rotate, fab_rotate_backward;
     private Boolean isFabOpen = false;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        phonebooklist = new ArrayList<>();
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tab_1_main, container, false);
+
+        phonebooklist = new ArrayList<>();
 
         //variables for fab animations
         fab_open = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_open);
@@ -70,11 +72,23 @@ public class Tab_1 extends Fragment {
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        phonebookadapter = new CustomAdapter(phonebooklist);
+        phonebookadapter = new PhonebookAdapter(phonebooklist, getActivity());
         mRecyclerView.setAdapter(phonebookadapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),mLinearLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(getContext(),position+"번 째 아이템 클릭",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+                Toast.makeText(getContext(),position+"번 째 아이템 롱 클릭",Toast.LENGTH_SHORT).show();
+            }
+        }));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,9 +105,10 @@ public class Tab_1 extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     try {
                         JSONObject person = jsonArray.getJSONObject(i);
-                        Item item = new Item(person.get("name").toString(), person.get("number").toString());
+                        Item item = new Item(person.get("name").toString(), person.get("number").toString(),(Bitmap) person.get("photo"));
                         phonebooklist.add(item);
                     }catch (JSONException e) {
+                        System.out.println("CHECKING!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
                         e.printStackTrace();
                     }
                 }
@@ -113,7 +128,7 @@ public class Tab_1 extends Fragment {
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
                         if (dialogFragment.isValid()) {
-                            Item item = new Item(dialogFragment.getInputName(), dialogFragment.getInputNumber());
+                            Item item = new Item(dialogFragment.getInputName(), dialogFragment.getInputNumber(),null);
                             phonebooklist.add(item);
                             phonebookadapter.notifyDataSetChanged();
                         }
@@ -128,7 +143,7 @@ public class Tab_1 extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public String loadJSONFromAsset() {
+/*    public String loadJSONFromAsset() {
         String json;
         try {
             InputStream is = getActivity().getAssets().open("contacts");
@@ -142,7 +157,7 @@ public class Tab_1 extends Fragment {
             return null;
         }
         return json;
-    }
+    }*/
 
     public JSONArray getJSONFromContactList() {
         JSONArray jsonArray = new JSONArray();
@@ -165,9 +180,18 @@ public class Tab_1 extends Fragment {
                     JSONObject person = new JSONObject();
                     String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                     String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    int photo_id = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_ID));
+                    Bitmap bitmap = queryContactImage(photo_id);
+                    if (bitmap == null){
+                        int random_number = (int) (Math.random()*3);
+                        bitmap = BitmapFactory.decodeResource(getContext().getResources(),
+                                getResources().getIdentifier("robot" + (random_number+1),"drawable",getActivity().getPackageName()));
+                    }
+
                     try {
                         person.put("name", name);
                         person.put("number", number);
+                        person.put("photo",bitmap);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -176,6 +200,23 @@ public class Tab_1 extends Fragment {
             }
         }
         return jsonArray;
+    }
+
+    private Bitmap queryContactImage(int imageDataRow) {
+        Cursor c = getActivity().getContentResolver().query(ContactsContract.Data.CONTENT_URI, new String[] {ContactsContract.CommonDataKinds.Photo.PHOTO}, ContactsContract.Data._ID + "=?", new String[] {Integer.toString(imageDataRow)}, null);
+        byte[] imageBytes = null;
+        if (c != null) {
+            if (c.moveToFirst()) {
+                imageBytes = c.getBlob(0);
+            }
+            c.close();
+        }
+
+        if (imageBytes != null) {
+            return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        } else {
+            return null;
+        }
     }
 
     public void anim() {
