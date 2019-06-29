@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -70,7 +71,7 @@ public class Tab_1 extends Fragment {
         fab2 = view.findViewById(R.id.fab2);
         //
 
-        JSONArray jsonArray = getJSONFromContactList();
+        final JSONArray jsonArray = getJSONFromContactList();
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject person = jsonArray.getJSONObject(i);
@@ -100,7 +101,8 @@ public class Tab_1 extends Fragment {
                 intent.putExtra("number",phonebooklist.get(position).getNumber());
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                phonebooklist.get(position).getPhoto().compress(Bitmap.CompressFormat.PNG, 100, stream);
+                Bitmap bmp = phonebooklist.get(position).getPhoto();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] bytes = stream.toByteArray();
                 intent.putExtra("photo",bytes);
                 startActivity(intent);
@@ -108,7 +110,26 @@ public class Tab_1 extends Fragment {
 
             @Override
             public void onLongItemClick(View view, int position) {
-                Toast.makeText(getContext(),position+"번 째 아이템 롱 클릭",Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder oDialog = new AlertDialog.Builder(getContext(),android.R.style.Theme_DeviceDefault_Light_Dialog);
+                oDialog.setMessage("연락처를 삭제합니다.")
+                        .setTitle("Delete Contact")
+                        .setPositiveButton("Commit", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                Toast.makeText(getContext(), "commit", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                Toast.makeText(getContext(), "cancel", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .show();
             }
         }));
 
@@ -122,20 +143,18 @@ public class Tab_1 extends Fragment {
             @Override
             public void onClick(View v) {
                 anim();
-                FragmentManager fm = getFragmentManager();
-                final CustomDialogFragment dialogFragment = new CustomDialogFragment();
-                dialogFragment.show(fm, "input_dialog");
-                fm.executePendingTransactions();
-                dialogFragment.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        if (dialogFragment.isValid()) {
-                            Item item = new Item(dialogFragment.getInputName(), dialogFragment.getInputNumber(),null);
-                            phonebooklist.add(item);
-                            phonebookadapter.notifyDataSetChanged();
-                        }
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        JSONObject json = new JSONObject(loadJSONFromAsset());
+                        JSONObject person = jsonArray.getJSONObject(i);
+                        Item item = new Item(person.get("name").toString(), person.get("number").toString(),generateRandomPhoto());
+                        phonebooklist.add(item);
+                    }catch (JSONException e) {
+                        System.out.println("check");
+                        e.printStackTrace();
                     }
-                });
+                }
+                phonebookadapter.notifyDataSetChanged();
             }
         });
 
@@ -151,7 +170,7 @@ public class Tab_1 extends Fragment {
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
                         if (dialogFragment.isValid()) {
-                            Item item = new Item(dialogFragment.getInputName(), dialogFragment.getInputNumber(),null);
+                            Item item = new Item(dialogFragment.getInputName(), dialogFragment.getInputNumber(),generateRandomPhoto());
                             phonebooklist.add(item);
                             phonebookadapter.notifyDataSetChanged();
                         }
@@ -166,7 +185,7 @@ public class Tab_1 extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-/*    public String loadJSONFromAsset() {
+    public String loadJSONFromAsset() {
         String json;
         try {
             InputStream is = getActivity().getAssets().open("contacts");
@@ -180,7 +199,7 @@ public class Tab_1 extends Fragment {
             return null;
         }
         return json;
-    }*/
+    }
 
     public JSONArray getJSONFromContactList() {
         JSONArray jsonArray = new JSONArray();
@@ -206,9 +225,7 @@ public class Tab_1 extends Fragment {
                     int photo_id = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_ID));
                     Bitmap bitmap = queryContactImage(photo_id);
                     if (bitmap == null){
-                        int random_number = (int) (Math.random()*3);
-                        bitmap = BitmapFactory.decodeResource(getContext().getResources(),
-                                getResources().getIdentifier("robot" + (random_number+1),"drawable",getActivity().getPackageName()));
+                        bitmap = generateRandomPhoto();
                     }
 
                     try {
@@ -259,5 +276,9 @@ public class Tab_1 extends Fragment {
             isFabOpen = true;
         }
     }
-
+    private Bitmap generateRandomPhoto() {
+        int random_number = (int) (Math.random()*3);
+        return BitmapFactory.decodeResource(getContext().getResources(),
+                getResources().getIdentifier("robot" + (random_number+1),"drawable",getActivity().getPackageName()));
+    }
 }

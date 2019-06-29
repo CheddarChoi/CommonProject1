@@ -47,6 +47,7 @@ public class CustomDialogFragment extends DialogFragment {
                 dialog.dismiss();
             }
         });
+        builder.setCancelable(false);
         return builder.create();
     }
 
