@@ -1,5 +1,7 @@
 package com.example.commonproject1.Tab_3;
 
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.commonproject1.R;
+
+import java.io.InputStream;
+import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -31,29 +37,36 @@ public class Tab_3 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
         View view = inflater.inflate(R.layout.tab_3_main, container, false);
 
         // codes for original images
         original_Image = view.findViewById(R.id.original_image);
-        int image_number = 1;   // 여기서 original image 번호를 지정하시면 됩니다.
+        int image_number = 1;
         original_Image.setImageResource(getResources().getIdentifier("sample" + image_number,"drawable",getActivity().getPackageName()));
 
         original_Image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // HERE
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+
                 System.out.println("clicked ><");
+                Toast.makeText(getActivity().getApplicationContext(), "new image", Toast.LENGTH_SHORT).show();
             }
         });
 
 
         // codes for filtered images
         for (int i=1; i<=11; i++){
-            ImageItem item = new ImageItem(getResources().getIdentifier("sample" + i,"drawable",getActivity().getPackageName()), "filter "+i);
+            ImageItem item = new ImageItem(getResources().getIdentifier("filter_" + i,"drawable",getActivity().getPackageName()), "filter "+i);
             imagelist.add(item);
         }
-            // 위의 코드에서 일단 모든 sample 사진들을 다 imagelist에 넣는 걸로 해 뒀는데 나중에 필터링 된 사진 이미지를 넣는 것으로 교체하시면 됩니다.
 
-            // 여기부터는 imagelist에 있는 사진들을 띄우는 코드입니다.
+        // show images in image list
         filtered_Images = view.findViewById(R.id.filtered_images);
 
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -64,5 +77,25 @@ public class Tab_3 extends Fragment {
         filtered_Images.setAdapter(filtered_Images_Adapter);
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // check which request we're responding to
+        if (requestCode == 1) {
+            // Make sure the request was successful
+            if (resultCode == getActivity().RESULT_OK) {
+                try {
+                    // make bitmap image
+                    InputStream in = getActivity().getContentResolver().openInputStream(data.getData());
+                    Bitmap img = BitmapFactory.decodeStream(in);
+                    in.close();
+                    // show image
+                    original_Image.setImageBitmap(img);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
