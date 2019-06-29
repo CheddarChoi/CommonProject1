@@ -1,6 +1,10 @@
 package com.example.commonproject1.Tab_1;
 
 import android.Manifest;
+<<<<<<< HEAD
+=======
+import android.content.ContentUris;
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,15 +14,28 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+<<<<<<< HEAD
 import android.view.LayoutInflater;
+=======
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+<<<<<<< HEAD
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+=======
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -67,7 +84,11 @@ public class Tab_1 extends Fragment {
         fab2 = view.findViewById(R.id.fab2);
         //
 
+<<<<<<< HEAD
         final JSONArray jsonArray = getJSONFromContactList();
+=======
+        JSONArray jsonArray = getJSONFromContactList();
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject person = jsonArray.getJSONObject(i);
@@ -97,8 +118,12 @@ public class Tab_1 extends Fragment {
                 intent.putExtra("number",phonebooklist.get(position).getNumber());
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
+<<<<<<< HEAD
                 Bitmap bmp = phonebooklist.get(position).getPhoto();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+=======
+                phonebooklist.get(position).getPhoto().compress(Bitmap.CompressFormat.PNG, 100, stream);
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
                 byte[] bytes = stream.toByteArray();
                 intent.putExtra("photo",bytes);
                 startActivity(intent);
@@ -106,6 +131,7 @@ public class Tab_1 extends Fragment {
 
             @Override
             public void onLongItemClick(View view, int position) {
+<<<<<<< HEAD
                 AlertDialog.Builder oDialog = new AlertDialog.Builder(getContext(),android.R.style.Theme_DeviceDefault_Light_Dialog);
                 oDialog.setMessage("연락처를 삭제합니다.")
                         .setTitle("Delete Contact")
@@ -126,6 +152,9 @@ public class Tab_1 extends Fragment {
                             }
                         })
                         .show();
+=======
+                Toast.makeText(getContext(),position+"번 째 아이템 롱 클릭",Toast.LENGTH_SHORT).show();
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
             }
         }));
 
@@ -139,6 +168,7 @@ public class Tab_1 extends Fragment {
             @Override
             public void onClick(View v) {
                 anim();
+<<<<<<< HEAD
                 JSONArray dummyjsonArray = null;
                 try {
                     JSONObject jsonObject = new JSONObject(loadJSONFromAsset());
@@ -158,6 +188,22 @@ public class Tab_1 extends Fragment {
                     }
                 }
                 phonebookadapter.notifyDataSetChanged();
+=======
+                FragmentManager fm = getFragmentManager();
+                final CustomDialogFragment dialogFragment = new CustomDialogFragment();
+                dialogFragment.show(fm, "input_dialog");
+                fm.executePendingTransactions();
+                dialogFragment.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        if (dialogFragment.isValid()) {
+                            Item item = new Item(dialogFragment.getInputName(), dialogFragment.getInputNumber(),null);
+                            phonebooklist.add(item);
+                            phonebookadapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
             }
         });
 
@@ -173,7 +219,11 @@ public class Tab_1 extends Fragment {
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
                         if (dialogFragment.isValid()) {
+<<<<<<< HEAD
                             Item item = new Item(dialogFragment.getInputName(), dialogFragment.getInputNumber(),generateRandomPhoto());
+=======
+                            Item item = new Item(dialogFragment.getInputName(), dialogFragment.getInputNumber(),null);
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
                             phonebooklist.add(item);
                             phonebookadapter.notifyDataSetChanged();
                         }
@@ -188,6 +238,7 @@ public class Tab_1 extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+<<<<<<< HEAD
     public String loadJSONFromAsset() {
         try {
             InputStream is = getActivity().getAssets().open("contacts");
@@ -202,6 +253,23 @@ public class Tab_1 extends Fragment {
             return null;
         }
     }
+=======
+/*    public String loadJSONFromAsset() {
+        String json;
+        try {
+            InputStream is = getActivity().getAssets().open("contacts");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }*/
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
 
     public JSONArray getJSONFromContactList() {
         JSONArray jsonArray = new JSONArray();
@@ -227,7 +295,13 @@ public class Tab_1 extends Fragment {
                     int photo_id = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_ID));
                     Bitmap bitmap = queryContactImage(photo_id);
                     if (bitmap == null){
+<<<<<<< HEAD
                         bitmap = generateRandomPhoto();
+=======
+                        int random_number = (int) (Math.random()*3);
+                        bitmap = BitmapFactory.decodeResource(getContext().getResources(),
+                                getResources().getIdentifier("robot" + (random_number+1),"drawable",getActivity().getPackageName()));
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
                     }
 
                     try {
@@ -278,9 +352,13 @@ public class Tab_1 extends Fragment {
             isFabOpen = true;
         }
     }
+<<<<<<< HEAD
     private Bitmap generateRandomPhoto() {
         int random_number = (int) (Math.random()*3);
         return BitmapFactory.decodeResource(getContext().getResources(),
                 getResources().getIdentifier("robot" + (random_number+1),"drawable",getActivity().getPackageName()));
     }
+=======
+
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
 }

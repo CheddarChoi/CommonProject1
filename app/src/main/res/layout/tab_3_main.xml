@@ -12,7 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="8dp"
+<<<<<<< HEAD
         app:srcCompat="@drawable/sample1" />
+=======
+        app:srcCompat="@drawable/sample1"
+        android:clickable="true"/>
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/filtered_images"

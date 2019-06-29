@@ -3,7 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+<<<<<<< HEAD
     android:layout_height="60dp">
+=======
+    android:layout_height="60dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp">
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
 
     <androidx.cardview.widget.CardView
         android:id="@+id/image_view"
@@ -29,7 +35,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
+<<<<<<< HEAD
         android:layout_marginTop="7dp"
+=======
+        android:layout_marginTop="8dp"
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_weight="1"
@@ -51,7 +61,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+<<<<<<< HEAD
         android:layout_marginBottom="9dp"
+=======
+        android:layout_marginBottom="8dp"
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
         android:layout_weight="1"
         android:clickable="true"
         android:gravity="left|center_vertical"

@@ -56,6 +56,10 @@
             android:id="@+id/phonebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
+=======
+            android:layout_marginTop="4dp"
+>>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
             android:clickable="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
