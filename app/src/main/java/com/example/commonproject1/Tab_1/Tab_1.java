@@ -1,7 +1,6 @@
 package com.example.commonproject1.Tab_1;
 
 import android.Manifest;
-import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,14 +10,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -143,13 +139,20 @@ public class Tab_1 extends Fragment {
             @Override
             public void onClick(View v) {
                 anim();
-                for (int i = 0; i < jsonArray.length(); i++) {
+                JSONArray dummyjsonArray = null;
+                try {
+                    JSONObject jsonObject = new JSONObject(loadJSONFromAsset());
+                    dummyjsonArray = jsonObject.getJSONArray("person");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for (int i = 0 ; i < dummyjsonArray.length() ; i++) {
                     try {
-                        JSONObject json = new JSONObject(loadJSONFromAsset());
-                        JSONObject person = jsonArray.getJSONObject(i);
-                        Item item = new Item(person.get("name").toString(), person.get("number").toString(),generateRandomPhoto());
+                        JSONObject person = dummyjsonArray.getJSONObject(i);
+                        Item item = new Item(person.get("name").toString(), person.get("number").toString(), generateRandomPhoto());
                         phonebooklist.add(item);
-                    }catch (JSONException e) {
+                    } catch (JSONException e) {
                         System.out.println("check");
                         e.printStackTrace();
                     }
@@ -186,19 +189,18 @@ public class Tab_1 extends Fragment {
     }
 
     public String loadJSONFromAsset() {
-        String json;
         try {
             InputStream is = getActivity().getAssets().open("contacts");
-            int size = is.available();
-            byte[] buffer = new byte[size];
+            int size = is.available();  //assigning size
+            byte[] buffer = new byte[size]; //make a buffer
             is.read(buffer);
             is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            String json = new String(buffer, "UTF-8"); //assigning read values into string
+            return json;
+        } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
-        return json;
     }
 
     public JSONArray getJSONFromContactList() {
