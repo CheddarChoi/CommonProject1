@@ -41,10 +41,7 @@ public class Tab_3 extends Fragment {
 
         View view = inflater.inflate(R.layout.tab_3_main, container, false);
 
-        // codes for original images
         original_Image = view.findViewById(R.id.original_image);
-        int image_number = 1;
-        original_Image.setImageResource(getResources().getIdentifier("sample" + image_number,"drawable",getActivity().getPackageName()));
 
         original_Image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
