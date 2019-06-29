@@ -38,11 +38,6 @@ public class Tab_3 extends Fragment {
         int image_number = 1;   // 여기서 original image 번호를 지정하시면 됩니다.
         original_Image.setImageResource(getResources().getIdentifier("sample" + image_number,"drawable",getActivity().getPackageName()));
 
-<<<<<<< HEAD
-
-        // codes for filtered images
-        for (int i=1; i<=30; i++){
-=======
         original_Image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // HERE
@@ -53,7 +48,6 @@ public class Tab_3 extends Fragment {
 
         // codes for filtered images
         for (int i=1; i<=11; i++){
->>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
             ImageItem item = new ImageItem(getResources().getIdentifier("sample" + i,"drawable",getActivity().getPackageName()), "filter "+i);
             imagelist.add(item);
         }
@@ -65,12 +59,7 @@ public class Tab_3 extends Fragment {
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         filtered_Images.setLayoutManager(mLinearLayoutManager);
-
-<<<<<<< HEAD
-        filtered_Images_Adapter = new FilteredImageAdapter(imagelist);
-=======
         filtered_Images_Adapter = new FilteredImageAdapter(imagelist, view, getActivity());
->>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
         filtered_Images.setAdapter(filtered_Images_Adapter);
 
         return view;

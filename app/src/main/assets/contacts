@@ -2,7 +2,6 @@
   "person":[
     {
       "name": "Bob",
-<<<<<<< HEAD
       "number": "000-0000-0000",
       "photo": 1
     },
@@ -15,17 +14,6 @@
       "name": "CheddarChoi",
       "number": "010-2796-5866",
       "photo": 3
-=======
-      "number": "000-0000-0000"
-    },
-    {
-      "name": "Vinny",
-      "number": "000-1111-2222"
-    },
-    {
-      "name": "CheddarChoi",
-      "number": "010-2796-5866"
->>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
     }
   ]
 }

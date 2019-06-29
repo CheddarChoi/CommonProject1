@@ -47,10 +47,7 @@ public class CustomDialogFragment extends DialogFragment {
                 dialog.dismiss();
             }
         });
-<<<<<<< HEAD
         builder.setCancelable(false);
-=======
->>>>>>> 06b1b29a0d08aaf0ddad44982950e5bf473e8f43
         return builder.create();
     }
 
