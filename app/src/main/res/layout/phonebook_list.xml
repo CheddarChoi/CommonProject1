@@ -8,7 +8,7 @@
     android:layout_marginBottom="4dp">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+        android:id="@+id/image_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="24dp"
@@ -44,7 +44,7 @@
         app:fontFamily="sans-serif"
         app:layout_constraintBottom_toTopOf="@+id/textView_phonebook_number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardView"
+        app:layout_constraintStart_toEndOf="@+id/image_view"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

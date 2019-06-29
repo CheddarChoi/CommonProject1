@@ -3,6 +3,7 @@ package com.example.commonproject1.Tab_1;
 import android.Manifest;
 import android.content.ContentUris;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -35,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -68,6 +70,17 @@ public class Tab_1 extends Fragment {
         fab2 = view.findViewById(R.id.fab2);
         //
 
+        JSONArray jsonArray = getJSONFromContactList();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            try {
+                JSONObject person = jsonArray.getJSONObject(i);
+                Item item = new Item(person.get("name").toString(), person.get("number").toString(),(Bitmap) person.get("photo"));
+                phonebooklist.add(item);
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         mRecyclerView = view.findViewById(R.id.phonebook);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -81,7 +94,16 @@ public class Tab_1 extends Fragment {
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getContext(),position+"번 째 아이템 클릭",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), PhonebookDetail.class);
+
+                intent.putExtra("name",phonebooklist.get(position).getName());
+                intent.putExtra("number",phonebooklist.get(position).getNumber());
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                phonebooklist.get(position).getPhoto().compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] bytes = stream.toByteArray();
+                intent.putExtra("photo",bytes);
+                startActivity(intent);
             }
 
             @Override
@@ -100,19 +122,20 @@ public class Tab_1 extends Fragment {
             @Override
             public void onClick(View v) {
                 anim();
-
-                JSONArray jsonArray = getJSONFromContactList();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    try {
-                        JSONObject person = jsonArray.getJSONObject(i);
-                        Item item = new Item(person.get("name").toString(), person.get("number").toString(),(Bitmap) person.get("photo"));
-                        phonebooklist.add(item);
-                    }catch (JSONException e) {
-                        System.out.println("CHECKING!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
-                        e.printStackTrace();
+                FragmentManager fm = getFragmentManager();
+                final CustomDialogFragment dialogFragment = new CustomDialogFragment();
+                dialogFragment.show(fm, "input_dialog");
+                fm.executePendingTransactions();
+                dialogFragment.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        if (dialogFragment.isValid()) {
+                            Item item = new Item(dialogFragment.getInputName(), dialogFragment.getInputNumber(),null);
+                            phonebooklist.add(item);
+                            phonebookadapter.notifyDataSetChanged();
+                        }
                     }
-                }
-                phonebookadapter.notifyDataSetChanged();
+                });
             }
         });
 

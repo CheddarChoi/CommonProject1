@@ -53,8 +53,6 @@ public class PhonebookAdapter extends RecyclerView.Adapter<PhonebookAdapter.View
         }
         else{
             Bitmap photo = mList.get(position).getPhoto();
-            int resizing_size = viewHolder.image.getWidth();
-            System.out.println(resizing_size);
             viewHolder.image.setImageBitmap(Bitmap.createScaledBitmap(photo, 50, 50, true));
         }
 
