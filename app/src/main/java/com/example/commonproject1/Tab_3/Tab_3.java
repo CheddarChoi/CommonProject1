@@ -4,7 +4,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.commonproject1.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import android.graphics.Bitmap;
 import android.widget.Toast;
@@ -33,6 +38,7 @@ public class Tab_3 extends Fragment {
     FilteredImageAdapter filtered_Images_Adapter;
 
     final int MY_PERMISSIONS_REQUEST_ALBUM = 101;
+    final int PIXEL_THRESHOLD = 800;
 
     String[] filter_names = { "Original Image", "Gray scale filter", "Gaussian Blur filter", "Sharpening filter",
             "Bright filter", "Dark filter", "Red mood filter", "Green mood filter", "Blue mood filter",
@@ -65,9 +71,7 @@ public class Tab_3 extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(), "new image", Toast.LENGTH_SHORT).show();
 
                 } else {
-
-                    Toast toast=Toast.makeText(getActivity(),"Permission denied :(", Toast.LENGTH_SHORT);
-                    toast.show();
+                    Toast.makeText(getActivity(),"Permission denied :(", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
@@ -95,7 +99,6 @@ public class Tab_3 extends Fragment {
                             MY_PERMISSIONS_REQUEST_ALBUM);
                 }
                 else {
-
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -134,10 +137,28 @@ public class Tab_3 extends Fragment {
             if (resultCode == getActivity().RESULT_OK) {
                 try {
                     // make bitmap image
-                    InputStream in = getActivity().getContentResolver().openInputStream(data.getData());
+                    Uri fileUri = data.getData();
+                    InputStream in = getActivity().getContentResolver().openInputStream(fileUri);
                     Bitmap img = BitmapFactory.decodeStream(in);
                     in.close();
 
+                    // resizing image if too big
+                    if (img.getHeight() > PIXEL_THRESHOLD | img.getWidth() > PIXEL_THRESHOLD){
+                        int dstWidth = img.getWidth();
+                        int dstHeight = img.getHeight();
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inSampleSize = 4;
+                        if (dstHeight > dstWidth){
+                            dstWidth = dstWidth*PIXEL_THRESHOLD/dstHeight;
+                            dstHeight = PIXEL_THRESHOLD;
+                        }
+                        else {
+                            dstHeight = dstHeight*PIXEL_THRESHOLD/dstWidth;
+                            dstWidth = PIXEL_THRESHOLD;
+                        }
+                        img = Bitmap.createScaledBitmap(img, dstWidth, dstHeight, true);
+                    }
+                    
                     // show image
                     original_Image.setImageBitmap(img);
                     filtered_Images_Adapter.setOriginal(img);
@@ -146,5 +167,17 @@ public class Tab_3 extends Fragment {
                 }
             }
         }
+    }
+    private Bitmap rotateImage(Bitmap bmp, int scale){
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(scale);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bmp, 0, 0, width, height, matrix, true);
+        bmp.recycle();
+
+        return resizedBitmap;
     }
 }
