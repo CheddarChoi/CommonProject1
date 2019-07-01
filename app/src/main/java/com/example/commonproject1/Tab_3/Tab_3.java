@@ -58,7 +58,7 @@ public class Tab_3 extends Fragment {
 
 
         // codes for filtered images
-        for (int i=1; i<=11; i++){
+        for (int i=0; i<=11; i++){
             ImageItem item = new ImageItem(getResources().getIdentifier("filter_" + i,"drawable",getActivity().getPackageName()), "filter "+i);
             imagelist.add(item);
         }
@@ -86,8 +86,10 @@ public class Tab_3 extends Fragment {
                     InputStream in = getActivity().getContentResolver().openInputStream(data.getData());
                     Bitmap img = BitmapFactory.decodeStream(in);
                     in.close();
+
                     // show image
                     original_Image.setImageBitmap(img);
+                    filtered_Images_Adapter.setOriginal(img);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
