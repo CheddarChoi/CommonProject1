@@ -26,8 +26,7 @@ public class PhonebookEdit extends AppCompatActivity {
     EditText edit_number;
     ImageView ImageView_photo;
     String name, number;
-    Bitmap photo;
-    boolean isEdit = false;
+    Bitmap photo;    boolean isEdit = false;
     int position;
 
     @Override
