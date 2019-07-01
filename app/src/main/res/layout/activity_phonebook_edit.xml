@@ -53,7 +53,6 @@
         android:layout_height="50dp"
         android:layout_marginStart="100dp"
         android:layout_marginLeft="100dp"
-        android:layout_marginTop="4dp"
         android:layout_marginEnd="100dp"
         android:layout_marginRight="100dp"
         android:layout_weight="1"
@@ -90,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:text="EMAIL"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
@@ -100,7 +99,7 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="35dp"
+                android:layout_width="40dp"
                 android:layout_height="55dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
@@ -118,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:text="MOBILE"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
@@ -128,7 +127,7 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="35dp"
+                android:layout_width="40dp"
                 android:layout_height="55dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
@@ -155,6 +154,25 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+            <EditText
+                android:id="@+id/edit_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="left|center_vertical"
+                android:text="@string/textView_phonebook_email"
+                android:textSize="14sp"
+                app:fontFamily="sans-serif"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="@+id/imageView2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

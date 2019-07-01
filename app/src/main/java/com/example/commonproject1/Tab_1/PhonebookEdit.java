@@ -22,10 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.commonproject1.R;
 
 public class PhonebookEdit extends AppCompatActivity {
-    EditText edit_name;
-    EditText edit_number;
+    EditText edit_name, edit_number, edit_email;
     ImageView ImageView_photo;
-    String name, number;
+    String name, number, email;
     Bitmap photo;
     boolean isEdit = false;
     int position;
@@ -38,6 +37,7 @@ public class PhonebookEdit extends AppCompatActivity {
         position = getIntent().getIntExtra("position",-1);
         name = getIntent().getStringExtra("name");
         number = getIntent().getStringExtra("number");
+        email = getIntent().getStringExtra("email");
         byte[] bytes = getIntent().getByteArrayExtra("photo");
         photo = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
 
@@ -50,10 +50,12 @@ public class PhonebookEdit extends AppCompatActivity {
 
         edit_name = findViewById(R.id.edit_name);
         edit_number = findViewById(R.id.edit_number);
+        edit_email = findViewById(R.id.edit_email);
         ImageView_photo = findViewById(R.id.imageView_phonebook);
 
         edit_name.setText(name);
         edit_number.setText(number);
+        edit_email.setText(email);
         ImageView_photo.setImageBitmap(photo);
     }
 
@@ -63,6 +65,7 @@ public class PhonebookEdit extends AppCompatActivity {
         resultIntent.putExtra("isEdit", isEdit);
         resultIntent.putExtra("name", edit_name.getText().toString());
         resultIntent.putExtra("number", edit_number.getText().toString());
+        resultIntent.putExtra("email", edit_email.getText().toString());
         setResult(Activity.RESULT_OK, resultIntent);
         super.onBackPressed();
     }
@@ -80,8 +83,8 @@ public class PhonebookEdit extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.commit:
-                if (edit_name.getText().toString().length() == 0 | edit_number.getText().toString().length() == 0){
-                    Toast.makeText(this,"이름과 전화번호를 입력하세요", Toast.LENGTH_LONG).show();
+                if (edit_name.getText().toString().length() == 0 | edit_number.getText().toString().length() == 0 | edit_email.getText().toString().length() == 0){
+                    Toast.makeText(this,"Fill every blanks", Toast.LENGTH_LONG).show();
                 }
                 else{
                     isEdit = true;

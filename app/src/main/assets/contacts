@@ -3,17 +3,20 @@
     {
       "name": "Bob",
       "number": "000-0000-0000",
-      "photo": 1
+      "photo": 1,
+      "email": "bob@gmail.com"
     },
     {
       "name": "Vinny",
       "number": "000-1111-2222",
-      "photo": 2
+      "photo": 2,
+      "email": ""
     },
     {
       "name": "CheddarChoi",
       "number": "010-2796-5866",
-      "photo": 3
+      "photo": 3,
+      "email": "cde981103@gmail.com"
     }
   ]
 }

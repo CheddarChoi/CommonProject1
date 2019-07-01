@@ -9,4 +9,5 @@
     <string name="input_title">Input your data</string>
     <string name="commit">COMMIT</string>
     <string name="cancel">CANCEL</string>
+    <string name="textView_phonebook_email">cde1103@kaist.ac.kr</string>
 </resources>

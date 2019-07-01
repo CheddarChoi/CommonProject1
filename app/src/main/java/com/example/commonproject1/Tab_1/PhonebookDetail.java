@@ -16,16 +16,16 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.commonproject1.R;
 
 public class PhonebookDetail extends AppCompatActivity implements View.OnClickListener {
-    TextView textView_name;
-    TextView textView_number;
+    TextView textView_name, textView_number, textView_email;
     ImageView ImageView_photo;
-    String name, number;
+    String name, number, email;
     Bitmap photo;
-    ImageButton callbutton, messagebutton;
+    ImageButton callbutton, messagebutton, emailbutton;
     byte[] bytes;
     boolean isDelete = false;
     boolean isEdit = false;
@@ -39,6 +39,7 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
         position = getIntent().getIntExtra("position",-1);
         name = getIntent().getStringExtra("name");
         number = getIntent().getStringExtra("number");
+        email = getIntent().getStringExtra("email");
         bytes = getIntent().getByteArrayExtra("photo");
         photo = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
 
@@ -51,16 +52,24 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
 
         textView_name = findViewById(R.id.edit_name);
         textView_number = findViewById(R.id.edit_number);
+        textView_email = findViewById(R.id.edit_email);
         ImageView_photo = findViewById(R.id.imageView_phonebook);
         callbutton = findViewById(R.id.CallButton);
         messagebutton = findViewById(R.id.messageButton);
+        emailbutton = findViewById(R.id.emailButton);
 
         callbutton.setOnClickListener(this);
         messagebutton.setOnClickListener(this);
+        emailbutton.setOnClickListener(this);
 
         textView_name.setText(name);
         textView_number.setText(number);
+        textView_email.setText(email);
         ImageView_photo.setImageBitmap(photo);
+
+        if (email.length() == 0){
+            emailbutton.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -80,6 +89,12 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
                 intentsms.putExtra("sms_body", "");
                 startActivity(intentsms);
                 break;
+            case R.id.emailButton:
+                Intent intentemail = new Intent(Intent.ACTION_SEND);
+                intentemail.putExtra(Intent.EXTRA_EMAIL, new String[] {email});
+                intentemail.setType("message/rfc822");
+                startActivity(intentemail);
+                break;
         }
     }
 
@@ -94,6 +109,7 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
                 edit_intent.putExtra("position",position);
                 edit_intent.putExtra("name",name);
                 edit_intent.putExtra("number",number);
+                edit_intent.putExtra("email",email);
                 edit_intent.putExtra("photo",bytes);
                 startActivityForResult(edit_intent, 2);
                 return true;
@@ -113,6 +129,7 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
         resultIntent.putExtra("position", position);
         resultIntent.putExtra("name", name);
         resultIntent.putExtra("number", number);
+        resultIntent.putExtra("email", email);
         setResult(Activity.RESULT_OK, resultIntent);
         super.onBackPressed();
     }
@@ -127,8 +144,10 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
                     if (isEdit){
                         name = data.getStringExtra("name");
                         number = data.getStringExtra("number");
+                        email = data.getStringExtra("email");
                         textView_name.setText(name);
                         textView_number.setText(number);
+                        textView_email.setText(email);
                     }
                 }
                 break;
