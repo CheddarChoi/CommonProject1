@@ -24,6 +24,10 @@ public class FilteredImageAdapter extends RecyclerView.Adapter<FilteredImageAdap
     private Bitmap original;
     private Bitmap filtered;
 
+    public void setOriginal(Bitmap original) {
+        this.original = original;
+    }
+
     public FilteredImageAdapter(ArrayList<ImageItem> list, View v, Context c) {
         imagelist = list;
         my_view = v;
@@ -64,68 +68,74 @@ public class FilteredImageAdapter extends RecyclerView.Adapter<FilteredImageAdap
                     original = ((BitmapDrawable)d).getBitmap();
                 }
 
-                switch(position){
+                switch(position % 12){
                     case 0:
+                        filtered = original;
+                        original_view.setImageBitmap(filtered);
+                        Toast.makeText(my_context.getApplicationContext(), "original image", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 1:
                         filtered = filter.doGreyscale(original);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "gray scale filter", Toast.LENGTH_SHORT).show();
                         break;
 
-                    case 1:
+                    case 2:
                         filtered = filter.applyGaussianBlur(original);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "gaussian filter", Toast.LENGTH_SHORT).show();
                         break;
 
-                    case 2:
+                    case 3:
                         filtered = filter.sharpen(original, 11);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "sharpening filter", Toast.LENGTH_SHORT).show();
                         break;
 
-                    case 3:
+                    case 4:
                         filtered = filter.doBrightness(original, 80);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "bright filter", Toast.LENGTH_SHORT).show();
                         break;
 
-                    case 4:
+                    case 5:
                         filtered = filter.doBrightness(original, -60);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "dark filter", Toast.LENGTH_SHORT).show();
                         break;
 
-                    case 5:
+                    case 6:
                         filtered = filter.createSepiaToningEffect(original, 256, 0.4, 0.3, 0.3);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "red-like filter", Toast.LENGTH_SHORT).show();
                         break;
 
-                    case 6:
+                    case 7:
                         filtered = filter.createSepiaToningEffect(original, 256, 0.3, 0.4, 0.3);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "green-like filter", Toast.LENGTH_SHORT).show();
                         break;
 
-                    case 7:
+                    case 8:
                         filtered = filter.createSepiaToningEffect(original, 256, 0.3, 0.3, 0.4);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "blue-like filter", Toast.LENGTH_SHORT).show();
                         break;
 
-                    case 8:
+                    case 9:
                         filtered = filter.histogram(original);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "High Dynamic Range filter", Toast.LENGTH_SHORT).show();
                         break;
 
-                    case 9:
+                    case 10:
                         filtered = filter.nonphoto(original, 64);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "Non-Photo realistic filter High", Toast.LENGTH_SHORT).show();
                         break;
 
-                    case 10:
+                    case 11:
                         filtered = filter.nonphoto(original, 32);
                         original_view.setImageBitmap(filtered);
                         Toast.makeText(my_context.getApplicationContext(), "Non-Photo realistic filter Low", Toast.LENGTH_SHORT).show();
