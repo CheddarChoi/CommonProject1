@@ -218,17 +218,16 @@ public class Tab_1 extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case 1 : {
+        switch (requestCode) {
+            case 1: {
                 if (resultCode == Activity.RESULT_OK) {
                     boolean isDelete = data.getBooleanExtra("isDelete", false);
                     boolean isEdit = data.getBooleanExtra("isEdit", false);
-                    int position = data.getIntExtra("position",-1);
+                    int position = data.getIntExtra("position", -1);
                     if (isDelete) {
                         phonebooklist.remove(position);
                         phonebookadapter.notifyDataSetChanged();
-                    }
-                    else if (isEdit) {
+                    } else if (isEdit) {
                         String new_name = data.getStringExtra("name");
                         String new_number = data.getStringExtra("number");
                         Bitmap photo = phonebooklist.get(position).getPhoto();
@@ -238,6 +237,8 @@ public class Tab_1 extends Fragment {
                 }
                 break;
             }
+        }
+    }
 
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {

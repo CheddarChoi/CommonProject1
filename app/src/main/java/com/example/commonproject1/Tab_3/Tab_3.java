@@ -76,8 +76,6 @@ public class Tab_3 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         View view = inflater.inflate(R.layout.tab_3_main, container, false);
 
         original_Image = view.findViewById(R.id.original_image);
