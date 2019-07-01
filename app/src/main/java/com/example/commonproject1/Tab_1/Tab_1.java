@@ -3,6 +3,7 @@ package com.example.commonproject1.Tab_1;
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.EntityIterator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -168,20 +170,16 @@ public class Tab_1 extends Fragment {
             @Override
             public void onClick(View v) {
                 anim();
-                FragmentManager fm = getFragmentManager();
-                final CustomDialogFragment dialogFragment = new CustomDialogFragment();
-                dialogFragment.show(fm, "input_dialog");
-                fm.executePendingTransactions();
-                dialogFragment.getDialog().setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        if (dialogFragment.isValid()) {
-                            Item item = new Item(dialogFragment.getInputName(), dialogFragment.getInputNumber(),generateRandomPhoto());
-                            phonebooklist.add(item);
-                            phonebookadapter.notifyDataSetChanged();
-                        }
-                    }
-                });
+
+                Intent edit_intent = new Intent(getActivity(), PhonebookEdit.class);
+                edit_intent.putExtra("position",phonebooklist.size());
+                edit_intent.putExtra("name","");
+                edit_intent.putExtra("number","");
+                ByteArrayOutputStream new_stream = new ByteArrayOutputStream();
+                generateRandomPhoto().compress(Bitmap.CompressFormat.PNG, 100, new_stream);
+                byte[] bytes = new_stream.toByteArray();
+                edit_intent.putExtra("photo",bytes);
+                startActivityForResult(edit_intent, 2);
             }});
         return view;
     }
@@ -211,6 +209,16 @@ public class Tab_1 extends Fragment {
                         phonebooklist.set(position, new Item(new_name, new_number, photo));
                         phonebookadapter.notifyItemChanged(position);
                     }
+                }
+                break;
+            }
+
+            case 2 : {
+                if (resultCode == Activity.RESULT_OK) {
+                    String new_name = data.getStringExtra("name");
+                    String new_number = data.getStringExtra("number");
+                    phonebooklist.add(new Item(new_name, new_number, generateRandomPhoto()));
+                    phonebookadapter.notifyDataSetChanged();
                 }
                 break;
             }
