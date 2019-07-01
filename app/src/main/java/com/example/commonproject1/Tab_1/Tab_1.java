@@ -1,6 +1,7 @@
 package com.example.commonproject1.Tab_1;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -91,33 +92,35 @@ public class Tab_1 extends Fragment {
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(), PhonebookDetail.class);
-
-                intent.putExtra("name",phonebooklist.get(position).getName());
-                intent.putExtra("number",phonebooklist.get(position).getNumber());
+                Intent detail_intent = new Intent(getActivity(), PhonebookDetail.class);
+                detail_intent.putExtra("position",position);
+                detail_intent.putExtra("name",phonebooklist.get(position).getName());
+                detail_intent.putExtra("number",phonebooklist.get(position).getNumber());
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 Bitmap bmp = phonebooklist.get(position).getPhoto();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] bytes = stream.toByteArray();
-                intent.putExtra("photo",bytes);
-                startActivity(intent);
+                detail_intent.putExtra("photo",bytes);
+                startActivityForResult(detail_intent, 1);
             }
 
             @Override
-            public void onLongItemClick(View view, int position) {
-                AlertDialog.Builder oDialog = new AlertDialog.Builder(getContext(),android.R.style.Theme_DeviceDefault_Light_Dialog);
+            public void onLongItemClick(View view, final int position) {
+                AlertDialog.Builder oDialog = new AlertDialog.Builder(getContext(),android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
                 oDialog.setMessage("연락처를 삭제합니다.")
                         .setTitle("Delete Contact")
-                        .setPositiveButton("Commit", new DialogInterface.OnClickListener()
+                        .setNegativeButton("Commit", new DialogInterface.OnClickListener()
                         {
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
+                                phonebooklist.remove(position);
+                                phonebookadapter.notifyDataSetChanged();
                                 Toast.makeText(getContext(), "commit", Toast.LENGTH_LONG).show();
                             }
                         })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                        .setPositiveButton("Cancel", new DialogInterface.OnClickListener()
                         {
                             @Override
                             public void onClick(DialogInterface dialog, int which)
@@ -186,6 +189,32 @@ public class Tab_1 extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case 1 : {
+                if (resultCode == Activity.RESULT_OK) {
+                    boolean isDelete = data.getBooleanExtra("isDelete", false);
+                    boolean isEdit = data.getBooleanExtra("isEdit", false);
+                    int position = data.getIntExtra("position",-1);
+                    if (isDelete) {
+                        phonebooklist.remove(position);
+                        phonebookadapter.notifyDataSetChanged();
+                    }
+                    else if (isEdit) {
+                        String new_name = data.getStringExtra("name");
+                        String new_number = data.getStringExtra("number");
+                        Bitmap photo = phonebooklist.get(position).getPhoto();
+                        phonebooklist.set(position, new Item(new_name, new_number, photo));
+                        phonebookadapter.notifyItemChanged(position);
+                    }
+                }
+                break;
+            }
+        }
     }
 
     public String loadJSONFromAsset() {

@@ -2,8 +2,8 @@ package com.example.commonproject1.Tab_1;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +16,6 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.commonproject1.R;
 
@@ -27,15 +26,20 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
     String name, number;
     Bitmap photo;
     ImageButton callbutton, messagebutton;
+    byte[] bytes;
+    boolean isDelete = false;
+    boolean isEdit = false;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phonebook_detail);
+        position = getIntent().getIntExtra("position",-1);
         name = getIntent().getStringExtra("name");
         number = getIntent().getStringExtra("number");
-        byte[] bytes = getIntent().getByteArrayExtra("photo");
+        bytes = getIntent().getByteArrayExtra("photo");
         photo = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
 
         // Get the ActionBar here to configure the way it behaves.
@@ -45,8 +49,8 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Contact Detail");
 
-        textView_name = findViewById(R.id.textView_phonebook_name);
-        textView_number = findViewById(R.id.textView_phonebook_number);
+        textView_name = findViewById(R.id.edit_name);
+        textView_number = findViewById(R.id.edit_number);
         ImageView_photo = findViewById(R.id.imageView_phonebook);
         callbutton = findViewById(R.id.CallButton);
         messagebutton = findViewById(R.id.messageButton);
@@ -60,6 +64,12 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_with_edit_delete, menu);
+        return true;
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.CallButton:
@@ -67,7 +77,7 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.messageButton:
                 Intent intentsms = new Intent( Intent.ACTION_VIEW, Uri.parse("sms:" + number));
-                intentsms.putExtra("sms_body", "Test text...");
+                intentsms.putExtra("sms_body", "");
                 startActivity(intentsms);
                 break;
         }
@@ -79,12 +89,50 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.edit:
+                Intent edit_intent = new Intent(this, PhonebookEdit.class);
+                edit_intent.putExtra("position",position);
+                edit_intent.putExtra("name",name);
+                edit_intent.putExtra("number",number);
+                edit_intent.putExtra("photo",bytes);
+                startActivityForResult(edit_intent, 2);
+                return true;
+            case R.id.delete:
+                isDelete = true;
+                onBackPressed();
+                return true;
         }
         return true;
     }
 
     @Override
     public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("isDelete", isDelete);
+        resultIntent.putExtra("isEdit", isEdit);
+        resultIntent.putExtra("position", position);
+        resultIntent.putExtra("name", name);
+        resultIntent.putExtra("number", number);
+        setResult(Activity.RESULT_OK, resultIntent);
         super.onBackPressed();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case 2 : {
+                if (resultCode == Activity.RESULT_OK) {
+                    isEdit = data.getBooleanExtra("isEdit", false);
+                    if (isEdit){
+                        name = data.getStringExtra("name");
+                        number = data.getStringExtra("number");
+                        textView_name.setText(name);
+                        textView_number.setText(number);
+                    }
+                }
+                break;
+            }
+        }
     }
 }

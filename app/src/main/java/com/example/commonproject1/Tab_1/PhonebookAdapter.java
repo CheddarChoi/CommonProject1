@@ -31,8 +31,8 @@ public class PhonebookAdapter extends RecyclerView.Adapter<PhonebookAdapter.View
         public ImageView image;
         public ViewHolder(View view) {
             super(view);
-            name = view.findViewById(R.id.textView_phonebook_name);
-            number = view.findViewById(R.id.textView_phonebook_number);
+            name = view.findViewById(R.id.edit_name);
+            number = view.findViewById(R.id.edit_number);
             image = view.findViewById(R.id.imageView_phonebook);
         }
     }
