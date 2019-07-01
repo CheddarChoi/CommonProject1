@@ -13,6 +13,7 @@ import com.example.commonproject1.Tab_3.Tab_3;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
+    public static Context mContext;
     private ViewPager pager;
     FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
 
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         tab_layout.setupWithViewPager(pager);
 
         pager.setCurrentItem(0);
+
+        mContext = this;
     }
 
 

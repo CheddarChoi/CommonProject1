@@ -1,6 +1,8 @@
 package com.example.commonproject1.Tab_3;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,10 +32,45 @@ public class Tab_3 extends Fragment {
     LinearLayoutManager mLinearLayoutManager;
     FilteredImageAdapter filtered_Images_Adapter;
 
+    final int MY_PERMISSIONS_REQUEST_ALBUM = 101;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imagelist = new ArrayList<>();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        System.out.println("permission request");
+
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_ALBUM: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+
+                    System.out.println("clicked ><");
+                    Toast.makeText(getActivity().getApplicationContext(), "new image", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    Toast toast=Toast.makeText(getActivity(),"Permission denied :(", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     @Nullable
@@ -46,13 +85,23 @@ public class Tab_3 extends Fragment {
         original_Image.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // HERE
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
 
-                System.out.println("clicked ><");
-                Toast.makeText(getActivity().getApplicationContext(), "new image", Toast.LENGTH_SHORT).show();
+                // permission check
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            MY_PERMISSIONS_REQUEST_ALBUM);
+                }
+                else {
+
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+
+                    System.out.println("clicked ><");
+                    Toast.makeText(getActivity().getApplicationContext(), "new image", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
