@@ -34,6 +34,10 @@ public class Tab_3 extends Fragment {
 
     final int MY_PERMISSIONS_REQUEST_ALBUM = 101;
 
+    String[] filter_names = { "Original Image", "Gray scale filter", "Gaussian Blur filter", "Sharpening filter",
+            "Bright filter", "Dark filter", "Red mood filter", "Green mood filter", "Blue mood filter",
+            "HDR filter", "Non photorealistic filter 1", "Non photorealistic filter 2"};
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +110,7 @@ public class Tab_3 extends Fragment {
 
         // codes for filtered images
         for (int i=0; i<=11; i++){
-            ImageItem item = new ImageItem(getResources().getIdentifier("filter_" + i,"drawable",getActivity().getPackageName()), "filter "+i);
+            ImageItem item = new ImageItem(getResources().getIdentifier("filter_" + i,"drawable",getActivity().getPackageName()), filter_names[i]);
             imagelist.add(item);
         }
 

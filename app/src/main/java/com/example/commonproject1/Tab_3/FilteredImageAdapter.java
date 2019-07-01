@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,11 +35,9 @@ public class FilteredImageAdapter extends RecyclerView.Adapter<FilteredImageAdap
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         public ImageView filtered_image;
-        public TextView filter_name;
         public CustomViewHolder(View view) {
             super(view);
             filtered_image = view.findViewById(R.id.filtered_image);
-            filter_name = view.findViewById(R.id.filter_name);
         }
     }
 
@@ -55,7 +52,6 @@ public class FilteredImageAdapter extends RecyclerView.Adapter<FilteredImageAdap
     @Override
     public void onBindViewHolder(CustomViewHolder viewHolder, final int position) {
         viewHolder.filtered_image.setImageResource(imagelist.get(position).getImage());
-        viewHolder.filter_name.setText(imagelist.get(position).getFilterName());
         viewHolder.filtered_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
