@@ -14,7 +14,6 @@
         android:layout_height="0dp"
         android:layout_margin="5dp"
         android:clickable="true"
-        android:scaleType="centerInside"
         app:layout_constraintBottom_toTopOf="@+id/filtered_images"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/loading_image"
