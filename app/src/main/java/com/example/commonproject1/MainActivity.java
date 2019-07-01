@@ -1,5 +1,6 @@
 package com.example.commonproject1;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -33,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         pager.setCurrentItem(0);
     }
 
-    //뒤로가기 버튼을 두번 연속으로 눌러야 종료되게끔 하는 메소드
+
+    // 뒤로가기 버튼을 두번 연속으로 눌러야 종료되게끔 하는 메소드
     private long time= 0;
     @Override
     public void onBackPressed(){
