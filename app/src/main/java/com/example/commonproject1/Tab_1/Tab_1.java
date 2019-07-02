@@ -221,7 +221,8 @@ public class Tab_1 extends Fragment {
                         String new_name = data.getStringExtra("name");
                         String new_number = data.getStringExtra("number");
                         String new_email = data.getStringExtra("email");
-                        Bitmap photo = phonebooklist.get(position).getPhoto();
+                        byte[] bytes = data.getByteArrayExtra("photo");
+                        Bitmap photo = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
                         phonebooklist.set(position, new Item(new_name, new_number, new_email, photo));
                         phonebookadapter.notifyItemChanged(position);
                     }

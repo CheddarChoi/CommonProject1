@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.addItem(new Tab_1(),"PhoneBook");
         adapter.addItem(new Tab_2(),"Gallery");
-        adapter.addItem(new Tab_3(),"What's New?");
+        adapter.addItem(new Tab_3(),"Filter Camera");
         pager.setAdapter(adapter);
 
         TabLayout tab_layout = findViewById(R.id.tab_layout);

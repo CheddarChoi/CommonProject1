@@ -16,7 +16,6 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.commonproject1.R;
 
@@ -48,13 +47,14 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setElevation(0);
         actionBar.setTitle("Contact Detail");
 
         textView_name = findViewById(R.id.edit_name);
         textView_number = findViewById(R.id.edit_number);
         textView_email = findViewById(R.id.edit_email);
         ImageView_photo = findViewById(R.id.imageView_phonebook);
-        callbutton = findViewById(R.id.CallButton);
+        callbutton = findViewById(R.id.callButton);
         messagebutton = findViewById(R.id.messageButton);
         emailbutton = findViewById(R.id.emailButton);
 
@@ -81,7 +81,7 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.CallButton:
+            case R.id.callButton:
                 startActivity(new Intent("android.intent.action.DIAL", Uri.parse("tel:" + number)));
                 break;
             case R.id.messageButton:
@@ -130,6 +130,7 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
         resultIntent.putExtra("name", name);
         resultIntent.putExtra("number", number);
         resultIntent.putExtra("email", email);
+        resultIntent.putExtra("photo",bytes);
         setResult(Activity.RESULT_OK, resultIntent);
         super.onBackPressed();
     }
@@ -145,9 +146,12 @@ public class PhonebookDetail extends AppCompatActivity implements View.OnClickLi
                         name = data.getStringExtra("name");
                         number = data.getStringExtra("number");
                         email = data.getStringExtra("email");
+                        bytes = data.getByteArrayExtra("photo");
+                        photo = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
                         textView_name.setText(name);
                         textView_number.setText(number);
                         textView_email.setText(email);
+                        ImageView_photo.setImageBitmap(photo);
                     }
                 }
                 break;

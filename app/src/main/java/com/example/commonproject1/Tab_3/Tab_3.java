@@ -4,11 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.commonproject1.R;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import android.graphics.Bitmap;
 import android.widget.Toast;
@@ -38,7 +34,7 @@ public class Tab_3 extends Fragment {
     FilteredImageAdapter filtered_Images_Adapter;
 
     final int MY_PERMISSIONS_REQUEST_ALBUM = 101;
-    final int PIXEL_THRESHOLD = 800;
+    final int PIXEL_THRESHOLD = 400;
 
     String[] filter_names = { "Original Image", "Gray scale filter", "Gaussian Blur filter", "Sharpening filter",
             "Bright filter", "Dark filter", "Red mood filter", "Green mood filter", "Blue mood filter",
@@ -110,7 +106,7 @@ public class Tab_3 extends Fragment {
             }
         });
 
-
+        imagelist = new ArrayList<>();
         // codes for filtered images
         for (int i=0; i<=11; i++){
             ImageItem item = new ImageItem(getResources().getIdentifier("filter_" + i,"drawable",getActivity().getPackageName()), filter_names[i]);
@@ -158,7 +154,7 @@ public class Tab_3 extends Fragment {
                         }
                         img = Bitmap.createScaledBitmap(img, dstWidth, dstHeight, true);
                     }
-                    
+
                     // show image
                     original_Image.setImageBitmap(img);
                     filtered_Images_Adapter.setOriginal(img);
@@ -167,17 +163,5 @@ public class Tab_3 extends Fragment {
                 }
             }
         }
-    }
-    private Bitmap rotateImage(Bitmap bmp, int scale){
-        int width = bmp.getWidth();
-        int height = bmp.getHeight();
-
-        Matrix matrix = new Matrix();
-        matrix.postRotate(scale);
-
-        Bitmap resizedBitmap = Bitmap.createBitmap(bmp, 0, 0, width, height, matrix, true);
-        bmp.recycle();
-
-        return resizedBitmap;
     }
 }
